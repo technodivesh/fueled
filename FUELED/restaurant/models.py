@@ -29,7 +29,7 @@ class Review(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.review
+        return self.review[:50]
 
 
 class Comment(models.Model):
@@ -41,4 +41,4 @@ class Comment(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.comment
+        return self.comment[:50]
