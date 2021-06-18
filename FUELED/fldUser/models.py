@@ -7,10 +7,11 @@ from django.dispatch import receiver
 class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    thumb_down = models.TextField()
-    last_loc_longi = models.FloatField('Longitude', null=True, blank=True)
-    last_loc_latit = models.FloatField('Latitude', null=True, blank=True)
+    emp_id = models.IntegerField('Emp Id',null=True, blank=True)
+    last_location = models.CharField('Last Location',max_length=100, null=True, blank=True)
 
+    def __str__(self):
+      return self.user.username
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -23,7 +24,5 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
+# Reference from
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
-  # <li>Username: {{ user.username }}</li>
-  # <li>Location: {{ user.profile.location }}</li>
-  # users = User.objects.all().select_related('profile')

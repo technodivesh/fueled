@@ -42,3 +42,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment[:50]
+
+
+class ThumbDown(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+
+class Visited(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
