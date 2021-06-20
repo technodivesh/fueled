@@ -18,7 +18,7 @@ from django.urls import path, include
 
 
 from rest_framework import routers
-from restaurant import views
+from restaurant.api import views
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet)
@@ -28,6 +28,7 @@ router.register(r'restaurants', views.RestaurantViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]
