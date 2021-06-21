@@ -21,16 +21,17 @@ from rest_framework import routers
 from restaurant.api import views
 
 router = routers.DefaultRouter()
-router.register(r'restaurants', views.RestaurantViewSet)
-# router.register(r'groups', views.GroupViewSet)
+router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')
+# router.register(r'groups', views.GroupViewSet,basename='api-users')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # path('api/restaurants', include('restaurant.api.urls', namespace='api-restaurants')),
+    # path('api/users', include('fldUser.api.urls', namespace='api-restaurants')),
 ]
 
 # urlpatterns = [
