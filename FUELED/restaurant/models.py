@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 class Restaurant(models.Model):
 
     name = models.CharField('Restaurant Name', max_length=50)
-    desc = models.TextField('Description')
-    locality = models.CharField('Area Name', max_length=50)
-    city = models.CharField(max_length=20)
-    state = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    desc = models.TextField('Description',null=True, blank=True)
+    locality = models.CharField('Area Name', max_length=50,null=True, blank=True)
+    city = models.CharField(max_length=20,null=True, blank=True)
+    state = models.CharField(max_length=50,null=True, blank=True)
+    country = models.CharField(max_length=50,null=True, blank=True)
     longi = models.FloatField('Longitude', null=True, blank=True)
     latit = models.FloatField('Latitude', null=True, blank=True)
     added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
