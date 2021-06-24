@@ -27,6 +27,7 @@ class RestaurantAPITestCase(APITestCase):
     def test_resto_create(self):
         resto_count = Restaurant.objects.count()
         self.assertEqual(resto_count, 1)
+
     
     def test_resto_post(self):
         user = User.objects.first()
@@ -34,4 +35,11 @@ class RestaurantAPITestCase(APITestCase):
         data = {"name": "SomeResto","added_by":user.id}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    # def test_review_post(self):
+    #     resto = Restaurant.objects.first()
+    #     url = "http://localhost:8000/api/restaurants/"
+    #     data = {"name": "SomeResto","added_by":user.id}
+    #     response = self.client.post(url, data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

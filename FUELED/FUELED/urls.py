@@ -19,9 +19,12 @@ from django.urls import path, include
 
 from rest_framework import routers
 from restaurant.api import views
+from fldUser.api import views as UserView
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')
+# router.register(r'restaurants', views.RestaurantViewSet, basename='api-reviews')
+router.register(r'users', UserView.UserViewSet, basename='api-users')
 # router.register(r'groups', views.GroupViewSet,basename='api-users')
 
 # Wire up our API using automatic URL routing.
