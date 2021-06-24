@@ -23,7 +23,8 @@ from fldUser.api import views as UserView
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')
-# router.register(r'restaurants', views.RestaurantViewSet, basename='api-reviews')
+router.register(r'reviews', views.ReviewViewSet, basename='api-reviews')
+router.register(r'comments', views.CommentViewSet, basename='api-comments')
 router.register(r'users', UserView.UserViewSet, basename='api-users')
 # router.register(r'groups', views.GroupViewSet,basename='api-users')
 

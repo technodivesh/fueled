@@ -47,7 +47,7 @@ class UserViewSet(viewsets.ViewSet):
 
         return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
-    def destroy(elf,request,pk=None):
+    def destroy(self,request,pk=None):
         user = User.objects.get(id=pk)
         user.delete()
         return Response({'message':'User Deleted'}, status=status.HTTP_202_ACCEPTED)
