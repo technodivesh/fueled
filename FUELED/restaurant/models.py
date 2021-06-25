@@ -22,11 +22,15 @@ class Restaurant(models.Model):
 
 class Review(models.Model):
 
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     review = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
+
+    # class Meta:
+    #     unique_together = ['restaurant', 'review']
+    #     ordering = ['review']
 
     def __str__(self):
         return self.review[:50]
@@ -34,7 +38,7 @@ class Review(models.Model):
 
 class Comment(models.Model):
 
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     comment = models.CharField(max_length=200)
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
