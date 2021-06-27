@@ -5,6 +5,25 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializer
 
 
+class SignUpViewSet(viewsets.ViewSet):
+
+    def create(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+class LoginViewSet(viewsets.ViewSet):
+
+    def create(self, request):
+        pass
+
+class LogOutViewSet(viewsets.ViewSet):
+
+    def create(self, request):
+        pass
+        
+
 class UserViewSet(viewsets.ViewSet):
 
     def list(self,request):

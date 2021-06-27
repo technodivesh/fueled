@@ -26,7 +26,9 @@ router.register(r'restaurants', views.RestaurantViewSet, basename='api-restauran
 router.register(r'reviews', views.ReviewViewSet, basename='api-reviews')
 router.register(r'comments', views.CommentViewSet, basename='api-comments')
 router.register(r'users', UserView.UserViewSet, basename='api-users')
-# router.register(r'groups', views.GroupViewSet,basename='api-users')
+router.register(r'signup', UserView.SignUpViewSet, basename='api-register')
+router.register(r'login', UserView.LoginViewSet, basename='api-login')
+router.register(r'logout', UserView.LogOutViewSet, basename='api-logout')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -38,6 +40,3 @@ urlpatterns = [
     # path('api/users', include('fldUser.api.urls', namespace='api-restaurants')),
 ]
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-# ]
