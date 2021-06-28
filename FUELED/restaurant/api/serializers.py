@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from restaurant.models import Restaurant, Review, Comment
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 
 # class RestaurantSerializer(serializers.HyperlinkedModelSerializer):

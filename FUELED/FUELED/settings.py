@@ -83,7 +83,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fueled',
+        'NAME': 'fueled2',
         'USER': 'divesh',
         'PASSWORD': 'divesh',
         'HOST': '127.0.0.1',
@@ -153,4 +153,4 @@ REST_FRAMEWORK = {
 }
 
 
-# AUTH_USER_MODEL = 'FUELED.User'
+AUTH_USER_MODEL = 'fldUser.User'

@@ -6,6 +6,7 @@ from restaurant.models import Restaurant
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+# from fldUser.models import User
 
 
 class RestaurantAPITestCase(APITestCase):
