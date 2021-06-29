@@ -197,9 +197,9 @@ class VisitedViewSet(viewsets.ViewSet):
 
     def list(self,request):
 
-        # visited = Visited.objects.all()
-        user_id = self.request.GET.get('user', None)
-        visited = Visited.objects.filter(user=user_id)
+        visited = Visited.objects.all()
+        # user_id = self.request.GET.get('user', None)
+        # visited = Visited.objects.filter(user=user_id)
         serializer = VisitedSerializer(visited, many=True)
         return Response(serializer.data)
 
@@ -211,11 +211,12 @@ class VisitedViewSet(viewsets.ViewSet):
 
     def create(self,request):
         serializer = VisitedSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response({'message':'Visited Marked'}, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
     def destroy(self,request,pk=None):
         visited = Visited.objects.get(id=pk)

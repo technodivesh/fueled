@@ -31,9 +31,9 @@ class Review(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
 
-    # class Meta:
-    #     unique_together = ['restaurant', 'review']
-    #     ordering = ['review']
+    class Meta:
+        unique_together = ['restaurant', 'review']
+        ordering = ['-created_on']
 
     def __str__(self):
         return self.review[:50]
