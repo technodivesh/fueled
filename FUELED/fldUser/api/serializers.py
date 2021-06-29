@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
 
         # fields = '__all__'
-        fields = ['username', 'email']
+        fields = ['id','username', 'email']
 
 
     def validate(self, attrs):

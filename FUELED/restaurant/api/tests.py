@@ -39,7 +39,7 @@ class RestaurantAPITestCase(APITestCase):
 
     # def test_review_post(self):
     #     resto = Restaurant.objects.first()
-    #     url = "http://localhost:8000/api/restaurants/"
+    #     url = "http://localhost:8000/api/reviews/"
     #     data = {"name": "SomeResto","added_by":user.id}
     #     response = self.client.post(url, data, format='json')
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)

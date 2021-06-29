@@ -2,10 +2,14 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 from restaurant.models import Restaurant, Review, Comment
-# from django.contrib.auth.models import User
+from restaurant.models import ThumbDown, Visited
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 from .serializers import RestaurantSerializer
 from .serializers import ReviewSerializer
 from .serializers import CommentSerializer
+from .serializers import ThumbDownSerializer
+from .serializers import VisitedSerializer
 
 
 class RestaurantViewSet(viewsets.ViewSet):
@@ -30,7 +34,7 @@ class RestaurantViewSet(viewsets.ViewSet):
             serializer.save()
             return Response({'message':'Restaurant created'}, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
 
     def update(self,request,pk=None):
@@ -154,5 +158,68 @@ class CommentViewSet(viewsets.ViewSet):
         comment.delete()
         return Response({'message':'Comment Deleted'}, status=status.HTTP_202_ACCEPTED)
 
+
+class ThumbDownViewSet(viewsets.ViewSet):
+
+
+    def list(self,request):
+
+        # thumbdown = ThumbDown.objects.all()
+        user_id = self.request.GET.get('user', None)
+        thumbdown = ThumbDown.objects.filter(user=user_id)
+        serializer = ThumbDownSerializer(thumbdown, many=True)
+        return Response(serializer.data)
+
+    # def retrieve(self,request,pk=None):
+
+    #     # thumbdown = ThumbDown.objects.get(user=pk)
+    #     user_id = self.request.GET.get('user', None)
+    #     thumbdown = ThumbDown.objects.filter(user=user_id)
+    #     serializer = ThumbDownSerializer(thumbdown)
+    #     return Response(serializer.data)
+
+    def create(self,request):
+        serializer = ThumbDownSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message':'ThumbDown Marked'}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+
+    def destroy(self,request,pk=None):
+        thumbdown = ThumbDown.objects.get(id=pk)
+        thumbdown.delete()
+        return Response({'message':'ThumbDown Removed'}, status=status.HTTP_202_ACCEPTED)
+
+
+class VisitedViewSet(viewsets.ViewSet):
+
+
+    def list(self,request):
+
+        # visited = Visited.objects.all()
+        user_id = self.request.GET.get('user', None)
+        visited = Visited.objects.filter(user=user_id)
+        serializer = VisitedSerializer(visited, many=True)
+        return Response(serializer.data)
+
+    # def retrieve(self,request,pk=None):
+
+    #     visited = Visited.objects.filter(user=pk)
+    #     serializer = VisitedSerializer(visited)
+    #     return Response(serializer.data)
+
+    def create(self,request):
+        serializer = VisitedSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message':'Visited Marked'}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+
+    def destroy(self,request,pk=None):
+        visited = Visited.objects.get(id=pk)
+        visited.delete()
+        return Response({'message':'Visited Removed'}, status=status.HTTP_202_ACCEPTED)
 # Ref from
 # https://www.django-rest-framework.org/api-guide/viewsets/
