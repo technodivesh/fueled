@@ -11,8 +11,11 @@ from .serializers import CommentSerializer
 from .serializers import ThumbDownSerializer
 from .serializers import VisitedSerializer
 
+from rest_framework.permissions import IsAuthenticated
 
 class RestaurantViewSet(viewsets.ViewSet):
+
+
 
     def list(self,request):
 
@@ -111,6 +114,8 @@ class ReviewViewSet(viewsets.ViewSet):
 
 
 class CommentViewSet(viewsets.ViewSet):
+
+    permission_classes = (IsAuthenticated,)
 
     def list(self,request):
 
