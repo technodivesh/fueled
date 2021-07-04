@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+print("BASE_DIR-----",BASE_DIR)
 
 
 # Quick-start development settings - unsuitable for production
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'restaurant.apps.RestaurantConfig',
     'fldUser.apps.FlduserConfig',
-    'rest_framework'
+    'rest_framework',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'FUELED.urls'
@@ -57,7 +60,7 @@ ROOT_URLCONF = 'FUELED.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,3 +159,8 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = 'fldUser.User'
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

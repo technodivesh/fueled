@@ -8,7 +8,7 @@ User = get_user_model()
 class Restaurant(models.Model):
 
     name = models.CharField('Restaurant Name', max_length=50)
-    desc = models.TextField('Description',null=True, blank=True)
+    desc = models.TextField('Description',max_length=500,null=True, blank=True)
     locality = models.CharField('Area Name', max_length=50,null=True, blank=True)
     city = models.CharField(max_length=20,null=True, blank=True)
     state = models.CharField(max_length=50,null=True, blank=True)
@@ -27,7 +27,7 @@ class Review(models.Model):
 
     restaurant = models.ForeignKey(Restaurant, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    review = models.TextField()
+    review = models.TextField(max_length=500)
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
 

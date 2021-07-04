@@ -22,6 +22,7 @@ from restaurant.api import views
 from fldUser.api import views as UserView
 
 from rest_framework_simplejwt import views as jwt_views
+from FUELED import settings
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')
@@ -37,6 +38,7 @@ router.register(r'logout', UserView.LogOutViewSet, basename='api-logout')
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
+    path('', include('restaurant.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -45,4 +47,11 @@ urlpatterns = [
     # path('api/restaurants', include('restaurant.api.urls', namespace='api-restaurants')),
     # path('api/users', include('fldUser.api.urls', namespace='api-restaurants')),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
+
 

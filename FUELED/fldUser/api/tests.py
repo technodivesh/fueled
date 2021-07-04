@@ -2,7 +2,6 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-# from restaurant.models import Restaurant
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -22,7 +21,8 @@ class UserAPITestCase(APITestCase):
 
 
     def test_user_post(self):
-        url = "http://localhost:8000/api/users/"
-        data = {"username": "testUserPost","email":"testUserPost@test.com"}
+        url = "http://localhost:8000/api/signup/"
+        data = {"username": "testUserPost","email":"testUserPost@test.com","password": "password"}
         response = self.client.post(url, data, format='json')
+        # print("response.status_code---",response.status_code)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
