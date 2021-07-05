@@ -11,11 +11,11 @@ from .serializers import CommentSerializer
 from .serializers import ThumbDownSerializer
 from .serializers import VisitedSerializer
 
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly 
 
 class RestaurantViewSet(viewsets.ViewSet):
 
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly ,)
 
     def list(self,request):
 
@@ -66,6 +66,8 @@ class RestaurantViewSet(viewsets.ViewSet):
 
 class ReviewViewSet(viewsets.ViewSet):
 
+    permission_classes = (IsAuthenticatedOrReadOnly ,)
+
     def list(self,request):
 
         reviews = Review.objects.all()
@@ -115,7 +117,7 @@ class ReviewViewSet(viewsets.ViewSet):
 
 class CommentViewSet(viewsets.ViewSet):
 
-    
+    permission_classes = (IsAuthenticatedOrReadOnly ,)
 
     def list(self,request):
 
@@ -166,7 +168,7 @@ class CommentViewSet(viewsets.ViewSet):
 
 class ThumbDownViewSet(viewsets.ViewSet):
 
-
+    permission_classes = (IsAuthenticatedOrReadOnly ,)
     def list(self,request):
 
         # thumbdown = ThumbDown.objects.all()
@@ -199,7 +201,7 @@ class ThumbDownViewSet(viewsets.ViewSet):
 
 class VisitedViewSet(viewsets.ViewSet):
 
-
+    permission_classes = (IsAuthenticatedOrReadOnly ,)
     def list(self,request):
 
         visited = Visited.objects.all()

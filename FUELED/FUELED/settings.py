@@ -86,7 +86,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fueled2',
+        'NAME': 'fueled',
         'USER': 'divesh',
         'PASSWORD': 'divesh',
         'HOST': '127.0.0.1',
@@ -148,10 +148,10 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         # 'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAdminUser',
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),

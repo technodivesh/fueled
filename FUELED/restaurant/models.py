@@ -7,14 +7,11 @@ User = get_user_model()
 # Create your models here.
 class Restaurant(models.Model):
 
-    name = models.CharField('Restaurant Name', max_length=50)
-    desc = models.TextField('Description',max_length=500,null=True, blank=True)
-    locality = models.CharField('Area Name', max_length=50,null=True, blank=True)
-    city = models.CharField(max_length=20,null=True, blank=True)
-    state = models.CharField(max_length=50,null=True, blank=True)
-    country = models.CharField(max_length=50,null=True, blank=True)
-    longi = models.FloatField('Longitude', null=True, blank=True)
-    latit = models.FloatField('Latitude', null=True, blank=True)
+    name = models.CharField(max_length=100)
+    desc = models.CharField(max_length=100,null=True,blank=True)
+    location = models.CharField(max_length=100,null=True, blank=True)
+    address = models.CharField(max_length=100,null=True,blank=True)
+    city = models.CharField(max_length=50,null=True,blank=True)
     added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
@@ -27,12 +24,12 @@ class Review(models.Model):
 
     restaurant = models.ForeignKey(Restaurant, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    review = models.TextField(max_length=500)
+    review = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['restaurant', 'review']
+        # unique_together = ['restaurant', 'review']
         ordering = ['-created_on']
 
     def __str__(self):

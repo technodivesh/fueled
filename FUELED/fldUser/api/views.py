@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 User = get_user_model()
 # from fldUser.models import User
-from .serializers import UserSerializer, SignUpSerializer
+from .serializers import UserSerializer, SignUpSerializer,LoginSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import BasicAuthentication
 
@@ -16,7 +16,7 @@ class SignUpViewSet(viewsets.ViewSet):
 
     permission_classes = (AllowAny,)
     # permission_classes = (IsAuthenticated,)
-    # authentication_classes = (BasicAuthentication,)
+    authentication_classes = (BasicAuthentication,)
 
     def create(self, request):
         serializer = SignUpSerializer(data=request.data)
@@ -27,8 +27,22 @@ class SignUpViewSet(viewsets.ViewSet):
 
 class LoginViewSet(viewsets.ViewSet):
 
+    permission_classes = (AllowAny,)
+
     def create(self, request):
         pass
+
+
+    permission_classes = (AllowAny,)
+    # renderer_classes = (UserJSONRenderer,)
+    serializer_class = LoginSerializer
+
+    def create(self, request):
+        user = request.data.get('user', {})
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LogOutViewSet(viewsets.ViewSet):
 
