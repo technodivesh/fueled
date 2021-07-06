@@ -28,7 +28,7 @@ export class RegisterComponent implements OnInit {
 
   submit(): void {
     console.log(this.form.getRawValue())
-    this.http.post('http://localhost:8000/api/signup', this.form.getRawValue())
+    this.http.post('http://localhost:8000/api/signup/', this.form.getRawValue())
       .subscribe(() => this.router.navigate(['/login']));
   }
 
