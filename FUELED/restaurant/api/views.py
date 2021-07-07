@@ -10,6 +10,7 @@ from .serializers import ReviewSerializer
 from .serializers import CommentSerializer
 from .serializers import ThumbDownSerializer
 from .serializers import VisitedSerializer
+import json
 
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly 
 
@@ -20,7 +21,7 @@ class RestaurantViewSet(viewsets.ViewSet):
     def list(self,request):
 
         restaurants = Restaurant.objects.all()
-        serializer = RestaurantSerializer(restaurants, many=True, context={'request': request})
+        serializer = RestaurantSerializer(restaurants, many=True)
         return Response(serializer.data)
 
     def retrieve(self,request,pk=None):

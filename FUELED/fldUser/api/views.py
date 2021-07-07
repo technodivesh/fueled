@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import BasicAuthentication
 import jwt, datetime
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from rest_framework import exceptions
 
 # from rest_framework.mixins import CreateModelMixin
 
@@ -41,10 +41,10 @@ class LoginViewSet(viewsets.ViewSet):
         user = User.objects.filter(email=email).first()
 
         if user is None:
-            raise AuthenticationFailed('User not found!')
+            raise exceptions.AuthenticationFailed('User not found!')
 
         if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
+            raise exceptions.AuthenticationFailed('Incorrect password!')
 
         payload = {
             'id': user.id,
@@ -87,15 +87,15 @@ class UserViewSet(viewsets.ViewSet):
         token = request.COOKIES.get('jwt')
 
         if not token:
-            raise AuthenticationFailed('Unauthenticated!')
+            raise exceptions.AuthenticationFailed('Unauthenticated!')
 
         try:
             # payload = jwt.decode(token, 'secret', algorithm=['HS256'])
             payload = jwt.decode(token, 'secret', algorithms='HS256')
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!')
+            raise exceptions.AuthenticationFailed('Unauthenticated!')
 
-        print("payload--", payload)
+        # print("payload--", payload)
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         # serializer = LoginSerializer(user)

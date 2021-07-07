@@ -28,6 +28,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
         fields = '__all__'
         # fields = ['name', 'desc', 'locality', 'city', 'added_by','reviews']
+        # fields = ['name']
         # depth = 1
 
 
