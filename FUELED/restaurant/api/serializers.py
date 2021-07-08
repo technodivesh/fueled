@@ -32,13 +32,12 @@ class RestaurantSerializer(serializers.ModelSerializer):
         # depth = 1
 
 
-
-
 class ThumbDownSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThumbDown
 
         fields = '__all__'
+        # fields = ['restaurant']
 
 class VisitedSerializer(serializers.ModelSerializer):
     class Meta:

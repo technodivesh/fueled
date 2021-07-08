@@ -169,14 +169,15 @@ class CommentViewSet(viewsets.ViewSet):
 
 class ThumbDownViewSet(viewsets.ViewSet):
 
-    permission_classes = (IsAuthenticatedOrReadOnly ,)
+    # permission_classes = (IsAuthenticatedOrReadOnly ,)
     def list(self,request):
 
-        # thumbdown = ThumbDown.objects.all()
-        user_id = self.request.GET.get('user', None)
-        thumbdown = ThumbDown.objects.filter(user=user_id)
-        serializer = ThumbDownSerializer(thumbdown, many=True)
-        return Response(serializer.data)
+        user_id = request.GET.get('user_id', None)
+        thumbdown = ThumbDown.objects.filter(user=user_id).values_list('restaurant',flat=True).distinct()
+        # serializer = ThumbDownSerializer(thumbdown, many=True)
+        # print("user_id--",user_id)
+        # return Response(serializer.data)
+        return Response(thumbdown)
 
     # def retrieve(self,request,pk=None):
 
@@ -187,12 +188,24 @@ class ThumbDownViewSet(viewsets.ViewSet):
     #     return Response(serializer.data)
 
     def create(self,request):
+        print("request---",request.user)
+        ############################
+        # from rest_framework_simplejwt.backends import TokenBackend
+        # token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+        # data = {'token': token}
+        #    try:
+        #       valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+        #       user = valid_data['user']
+        #       request.user = user
+        #    except ValidationError as v:
+        #       print("validation error", v)
+      ###############################################
         serializer = ThumbDownSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'message':'ThumbDown Marked'}, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
     def destroy(self,request,pk=None):
         thumbdown = ThumbDown.objects.get(id=pk)
