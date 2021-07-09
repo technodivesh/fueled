@@ -20,7 +20,14 @@ class RestaurantViewSet(viewsets.ViewSet):
 
     def list(self,request):
 
-        restaurants = Restaurant.objects.all()
+        if request.GET.get('all') == 'true':
+            restaurants = Restaurant.objects.all()
+        else:
+            # TODO: Get user_id from token
+            inner_qs = ThumbDown.objects.filter(user=1).values_list('restaurant',flat=True).distinct()
+            restaurants = Restaurant.objects.exclude(id__in=inner_qs)
+
+
         serializer = RestaurantSerializer(restaurants, many=True)
         return Response(serializer.data)
 
@@ -169,7 +176,7 @@ class CommentViewSet(viewsets.ViewSet):
 
 class ThumbDownViewSet(viewsets.ViewSet):
 
-    # permission_classes = (IsAuthenticatedOrReadOnly ,)
+    # permission_classes = (IsAuthenticated,)
     def list(self,request):
 
         user_id = request.GET.get('user_id', None)
@@ -215,7 +222,7 @@ class ThumbDownViewSet(viewsets.ViewSet):
 
 class VisitedViewSet(viewsets.ViewSet):
 
-    permission_classes = (IsAuthenticatedOrReadOnly ,)
+    # permission_classes = (IsAuthenticatedOrReadOnly ,)
     def list(self,request):
 
         visited = Visited.objects.all()

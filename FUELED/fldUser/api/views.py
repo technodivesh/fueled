@@ -13,6 +13,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import exceptions
 
 # from rest_framework.mixins import CreateModelMixin
+from rest_framework_simplejwt.backends import TokenBackend
 
 
 class SignUpViewSet(viewsets.ViewSet):
@@ -27,7 +28,14 @@ class SignUpViewSet(viewsets.ViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
+# token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+# data = {'token': token}
+#    try:
+#       valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+#       user = valid_data['user']
+#       request.user = user
+#    except ValidationError as v:
+#       print("validation error", v)
 class LoginViewSet(viewsets.ViewSet):
 
     permission_classes = (AllowAny,)
