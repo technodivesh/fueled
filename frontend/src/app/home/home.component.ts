@@ -1,23 +1,45 @@
-import { Component, OnInit } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Component,NgModule, OnInit, EventEmitter } from '@angular/core';
+import {HttpClient } from '@angular/common/http';
 import {Emitters} from '../emitters/emitters';
+import { Pipe, PipeTransform } from '@angular/core';
+
+
+interface Student {
+    id: Number;
+    name: String;
+    email: String;
+    gender: String;
+}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  // encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class HomeComponent implements OnInit {
   message = "You are not logged in";
+  restaurants:any = [];
+  authenticated = false;
+
+
   constructor(
     private http: HttpClient
     ) { }
 
   ngOnInit(): void {
+
+    Emitters.authEmitter.subscribe(
+      (auth: boolean) => {
+        this.authenticated = auth;
+      }
+    );
     this.http.get('http://localhost:8000/api/user', {withCredentials: true}).subscribe(
       (res: any)  => {
         console.log(res);
         this.message = `Hi ${res.username}`;
+        localStorage.setItem('username', `${res.username}`);
+        localStorage.setItem('id', `${res.id}`);
         Emitters.authEmitter.emit(true);
       },
       err => {
@@ -25,6 +47,34 @@ export class HomeComponent implements OnInit {
         Emitters.authEmitter.emit(false);
       }
     );
+
+    //////////////////
+    this.http.get('http://localhost:8000/api/restaurants/', {withCredentials: true}).subscribe(
+      (response: any)  => {
+        console.log(typeof response);
+        console.log(response);
+        this.restaurants = response;
+      },
+      err => {
+        // this.message = "You are not logged in";
+        // Emitters.authEmitter.emit(false);
+      }
+    );
   }
+    //////////////////
+
+    // this.form.getRawValue()
+    onclick(restaurant:any){
+
+      console.log("ThumbsDown",restaurant);
+      alert("Are you sure to ThumbsDown this restaurant");
+
+      this.http.post('http://localhost:8000/api/thumbdowns/', {user:9,restaurant:restaurant.id}, 
+        {withCredentials: true}
+      ).subscribe();
+      this.restaurants.splice(restaurant,1);
+
+    }
+    //////////////////
 
 }

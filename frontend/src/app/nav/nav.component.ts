@@ -9,7 +9,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class NavComponent implements OnInit {
   authenticated = false;
-
+  username = localStorage.getItem('username');
   constructor(private http: HttpClient) {
   }
 
@@ -24,6 +24,8 @@ export class NavComponent implements OnInit {
   logout(): void {
     this.http.post('http://localhost:8000/api/logout/', {}, {withCredentials: true})
       .subscribe(() => this.authenticated = false);
+      localStorage.removeItem('username');
+      localStorage.removeItem('id');
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient } from '@angular/common/http';
 import {Router} from '@angular/router';
 
 @Component({
@@ -26,10 +26,11 @@ export class LoginComponent implements OnInit {
   }
 
   submit(): void {
+
     console.log('this.form.getRawValue()', this.form.getRawValue());
-    this.http.post('http://localhost:8000/api/login/', this.form.getRawValue(), {
-      withCredentials: true
-    }).subscribe(() => this.router.navigate(['/']));
+    this.http.post('http://localhost:8000/api/login/', this.form.getRawValue(), 
+      {withCredentials: true}
+      ).subscribe(() => this.router.navigate(['/']));
   }
 
 }
