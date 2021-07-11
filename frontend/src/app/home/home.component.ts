@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
     }
 
     // this.form.getRawValue()
-    onclick(restaurant:any){
+    thumbdowns(restaurant:any){
 
       console.log("ThumbsDown",restaurant);
       alert("Are you sure to ThumbsDown this restaurant");

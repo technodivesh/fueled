@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import {Emitters} from '../emitters/emitters';
 
 @Component({
   selector: 'app-restaurant',
@@ -10,25 +12,40 @@ import {Router} from '@angular/router';
 })
 export class RestaurantComponent implements OnInit {
 
+
+  id:any = "";
+  restaurant:any = "";
+
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private _Activatedroute:ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    // this.form = this.formBuilder.group({
-    //   username: '',
-    //   email: '',
-    //   password: ''
-    // });
-
+    this.id = this._Activatedroute.snapshot.paramMap.get("id");
+    console.log("this.id--",this.id);
+    this.get_resaturant_details(this.id);
   }
 
-  // submit(): void {
-  //   console.log(this.form.getRawValue())
-  //   this.http.post('http://localhost:8000/api/signup/', this.form.getRawValue())
-  //     .subscribe(() => this.router.navigate(['/login']));
-  // }
+  get_resaturant_details(id:any){
+
+      console.log("called---");
+      this.http.get('http://localhost:8000/api/restaurants/' + id, {}).subscribe(
+      (response: any)  => {
+        console.log(typeof response);
+        console.log(response);
+        this.restaurant = response;
+        // Emitters.authEmitter.emit(true);
+      },
+      err => {
+        // Emitters.authEmitter.emit(true);
+        // this.message = "You are not logged in";
+        // Emitters.authEmitter.emit(false);
+      }
+    );
+
+    }
 
 }
