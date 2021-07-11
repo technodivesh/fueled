@@ -1,5 +1,5 @@
 import { Component,NgModule, OnInit, EventEmitter } from '@angular/core';
-import {HttpClient } from '@angular/common/http';
+import {HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import {Emitters} from '../emitters/emitters';
 import { Pipe, PipeTransform } from '@angular/core';
 
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   message = "You are not logged in";
   restaurants:any = [];
   authenticated = false;
-
+  // get_resaturant_list: any = "";
 
   constructor(
     private http: HttpClient
@@ -47,9 +47,17 @@ export class HomeComponent implements OnInit {
         Emitters.authEmitter.emit(false);
       }
     );
-
+    this.get_resaturant_list(false);
     //////////////////
-    this.http.get('http://localhost:8000/api/restaurants/', {withCredentials: true}).subscribe(
+    
+  }
+    //////////////////
+
+    get_resaturant_list(all:any){
+      // const headers = new HttpHeaders().append('header', 'value');
+      const params = new HttpParams().append('all', all);
+
+      this.http.get('http://localhost:8000/api/restaurants/', {params}).subscribe(
       (response: any)  => {
         console.log(typeof response);
         console.log(response);
@@ -60,8 +68,8 @@ export class HomeComponent implements OnInit {
         // Emitters.authEmitter.emit(false);
       }
     );
-  }
-    //////////////////
+
+    }
 
     // this.form.getRawValue()
     onclick(restaurant:any){

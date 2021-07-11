@@ -12,7 +12,7 @@
         <p class="lead text-muted">It's Restaurant recommendation application. Most Recommended restaurants are listed based on user's current location, previous visited restaurant, favorite cuisine.</p>
         <p *ngIf="authenticated" >
           <a class="btn btn-primary my-2">Add Restaurant</a>
-          <a href="#" class="btn btn-secondary my-2">Show All</a>
+          <a (click)="get_resaturant_list('true')" class="btn btn-secondary my-2">Show All</a>
         </p>
       </div>
     </div>

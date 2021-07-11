@@ -16,9 +16,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticate
 
 class RestaurantViewSet(viewsets.ViewSet):
 
-    permission_classes = (IsAuthenticatedOrReadOnly ,)
+    # permission_classes = (IsAuthenticatedOrReadOnly ,)
 
     def list(self,request):
+
+        print("------------",request.GET.get('all'))
 
         if request.GET.get('all') == 'true':
             restaurants = Restaurant.objects.all()
