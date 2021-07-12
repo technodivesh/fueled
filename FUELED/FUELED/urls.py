@@ -20,6 +20,9 @@ from django.urls import path, include
 from rest_framework import routers
 from restaurant.api import views
 from fldUser.api import views as UserView
+from rest_framework.schemas import get_schema_view
+from rest_framework.documentation import include_docs_urls
+
 
 from rest_framework_simplejwt import views as jwt_views
 from FUELED import settings
@@ -47,8 +50,12 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # path('api/restaurants', include('restaurant.api.urls', namespace='api-restaurants')),
-    # path('api/users', include('fldUser.api.urls', namespace='api-restaurants')),
+    path('openapi', get_schema_view(
+        title="RestaurantAPI",
+        description="API for the Restaurant Recommendation",
+        version="1.0.0"
+    ), name='openapi-schema'),
+    path('docs/', include_docs_urls(title='RestaurantAPI')),
 ]
 
 if settings.DEBUG:
