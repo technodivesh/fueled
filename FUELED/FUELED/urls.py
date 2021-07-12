@@ -43,7 +43,7 @@ router.register(r'logout', UserView.LogOutViewSet, basename='api-logout')
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('', include('restaurant.urls')),
+    # path('', include('restaurant.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
