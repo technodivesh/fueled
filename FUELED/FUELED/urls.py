@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 from rest_framework import routers
 from restaurant.api import views
@@ -23,9 +26,10 @@ from fldUser.api import views as UserView
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
 
-
 from rest_framework_simplejwt import views as jwt_views
-from FUELED import settings
+from fldUser.api.views import CustomTokenObtainPairView
+
+# from FUELED import settings
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')
@@ -46,11 +50,11 @@ urlpatterns = [
     # path('', include('restaurant.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('openapi', get_schema_view(
+    path('schema', get_schema_view(
         title="RestaurantAPI",
         description="API for the Restaurant Recommendation",
         version="1.0.0"
@@ -64,3 +68,11 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
     ]
 
+
+urlpatterns += [
+    # ... the rest of your URLconf goes here ...
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    # ... the rest of your URLconf goes here ...
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

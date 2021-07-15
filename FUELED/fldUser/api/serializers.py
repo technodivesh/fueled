@@ -1,9 +1,29 @@
 from rest_framework import serializers
-# from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 User = get_user_model()
-# from fldUser.models import User
-from django.contrib.auth import authenticate
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        # data['refresh'] = str(refresh)
+        # data['access'] = str(refresh.access_token)
+
+        # Add extra responses here
+        data['id'] = self.user.id
+        data['email'] = self.user.email
+        data['username'] = self.user.username
+        data['groups'] = self.user.groups.values_list('name', flat=True)
+        return data
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+##################
 
 class SignUpSerializer(serializers.ModelSerializer):
 

@@ -13,22 +13,29 @@ from .serializers import VisitedSerializer
 import json
 
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly 
+from rest_framework_simplejwt.tokens import AccessToken
 
 class RestaurantViewSet(viewsets.ViewSet):
 
-    # permission_classes = (IsAuthenticatedOrReadOnly ,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self,request):
 
-        print("------------",request.GET.get('all'))
+        """
+        If GET request will be send with param all=true 
+        all records will be returned without filtering of thumbsdowm records
+        """
+
+        # token_str = request.META.get('HTTP_AUTHORIZATION')
+        user_id = request.user.id
+        print("user_id---",user_id)
 
         if request.GET.get('all') == 'true':
             restaurants = Restaurant.objects.all()
         else:
             # TODO: Get user_id from token
-            inner_qs = ThumbDown.objects.filter(user=1).values_list('restaurant',flat=True).distinct()
+            inner_qs = ThumbDown.objects.filter(user=user_id).values_list('restaurant',flat=True).distinct()
             restaurants = Restaurant.objects.exclude(id__in=inner_qs)
-
 
         serializer = RestaurantSerializer(restaurants, many=True)
         return Response(serializer.data)
@@ -177,8 +184,15 @@ class CommentViewSet(viewsets.ViewSet):
 
 
 class ThumbDownViewSet(viewsets.ViewSet):
+    
+    """
+    get:
+    A description of the get method on the custom action.
 
-    # permission_classes = (IsAuthenticated,)
+    post:
+    A description of the post method on the custom action.
+    """ 
+    permission_classes = (IsAuthenticated,)
     def list(self,request):
 
         user_id = request.GET.get('user_id', None)
@@ -197,6 +211,11 @@ class ThumbDownViewSet(viewsets.ViewSet):
     #     return Response(serializer.data)
 
     def create(self,request):
+
+        """
+        param1 -- A first parameter
+        param2 -- A second parameter
+        """ 
         print("request---",request.user)
         ############################
         # from rest_framework_simplejwt.backends import TokenBackend
