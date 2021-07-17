@@ -15,9 +15,21 @@ import json
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly 
 from rest_framework_simplejwt.tokens import AccessToken
 
-class RestaurantViewSet(viewsets.ViewSet):
+class RestaurantViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = RestaurantSerializer
+    """
+    retrieve:
+    Return requester Restaurant Details.
+
+    list:
+    Return List of all Restaurants .
+
+    create:
+    Create a new Restaurant.
+    """
+    queryset = Restaurant.objects.all()
 
     def list(self,request):
 
@@ -48,13 +60,10 @@ class RestaurantViewSet(viewsets.ViewSet):
 
     def create(self,request):
         serializer = RestaurantSerializer(data=request.data)
-        # print("request.data--", request.data)
-        # print("serializer--", serializer)
+        request.data['added_by'] = request.user.id
         if serializer.is_valid():
             serializer.save()
             return Response({'message':'Restaurant created'}, status=status.HTTP_201_CREATED)
-
-        # return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
 
     def update(self,request,pk=None):
@@ -81,9 +90,12 @@ class RestaurantViewSet(viewsets.ViewSet):
         return Response({'message':'Restaurant Deleted'}, status=status.HTTP_202_ACCEPTED)
 
 
-class ReviewViewSet(viewsets.ViewSet):
+class ReviewViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly ,)
+    serializer_class = ReviewSerializer
+
+    queryset = Review.objects.all()
 
     def list(self,request):
 
@@ -132,9 +144,25 @@ class ReviewViewSet(viewsets.ViewSet):
         return Response({'message':'Review Deleted'}, status=status.HTTP_202_ACCEPTED)
 
 
-class CommentViewSet(viewsets.ViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
+
+    """
+    retrieve:
+    Return the requested comment.
+
+    list:
+    Return a list of all the existing comments.
+
+    create:
+    Create a new comment instance.
+
+    destroy:
+    Delete the Comment
+    """
 
     permission_classes = (IsAuthenticatedOrReadOnly ,)
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
 
     def list(self,request):
 
@@ -158,24 +186,6 @@ class CommentViewSet(viewsets.ViewSet):
 
         return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
-
-    def update(self,request,pk=None):
-        comment = Comment.objects.get(id=pk)
-        serializer = CommentSerializer(comment, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message':'Comment Updated'}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
-
-    def partial_update(self, request, pk=None):
-        comment = Comment.objects.get(id=pk)
-        serializer = CommentSerializer(comment, data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message':'Comment Updated'}, status=status.HTTP_202_ACCEPTED)
-
-        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
     def destroy(self,request,pk=None):
         comment = Comment.objects.get(id=pk)
