@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 User = get_user_model()
 # from fldUser.models import User
-from .serializers import UserSerializer, RegisterSerializer,LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer
 from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.authentication import BasicAuthentication
@@ -100,8 +100,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def retrieve(self,request,pk=None):
 
-        print(request.user.username)
-        print(request.user.id)
+        # print(request.user.username)
+        # print(request.user.id)
         user = User.objects.get(id=request.user.id)
         serializer = UserSerializer(user)
         return Response(serializer.data)
