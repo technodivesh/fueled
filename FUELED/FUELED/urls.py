@@ -40,9 +40,9 @@ router.register(r'visited', views.VisitedViewSet, basename='api-visited')
 router.register(r'user', UserView.UserViewSet, basename='api-user')
 # router.register(r'users', UserView.UserViewSet, basename='api-users')
 # router.register(r'user', UserView.UserViewSet, basename='api-user')
-router.register(r'signup', UserView.SignUpViewSet, basename='api-register')
-router.register(r'login', UserView.LoginViewSet, basename='api-login')
-router.register(r'logout', UserView.LogOutViewSet, basename='api-logout')
+router.register(r'register', UserView.RegisterViewSet, basename='api-register')
+# router.register(r'login', UserView.LoginViewSet, basename='api-login')
+# router.register(r'logout', UserView.LogOutViewSet, basename='api-logout')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -54,11 +54,12 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # path('schema', get_schema_view(
-    #     title="RestaurantAPI",
-    #     description="API for the Restaurant Recommendation",
-    #     version="1.0.0"
-    # ), name='openapi-schema'),
+    path('schema', get_schema_view(
+        title="RestaurantAPI",
+        description="API for the Restaurant Recommendation",
+        url='http://localhost/api/schema',
+        version="1.0.0"
+    ), name='openapi-schema'),
     path('docs/', include_docs_urls(title='RestaurantAPI')),
 ]
 

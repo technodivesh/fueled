@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 User = get_user_model()
 # from fldUser.models import User
-from .serializers import UserSerializer, SignUpSerializer,LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer,LoginSerializer
 from .serializers import CustomTokenObtainPairSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.authentication import BasicAuthentication
 import jwt, datetime
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -15,145 +15,94 @@ from rest_framework import exceptions
 
 # from rest_framework_simplejwt.backends import TokenBackend
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from rest_framework.schemas import ManualSchema, AutoSchema
+import coreapi,coreschema
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class ActionBasedPermission(AllowAny):
+    """
+    Grant or deny access to a view, based on a mapping in view.action_permissions
+    """
+    def has_permission(self, request, view):
+        for klass, actions in getattr(view, 'action_permissions', {}).items():
+            if view.action in actions:
+                return klass().has_permission(request, view)
+        return False
 #############################
 
-class SignUpViewSet(viewsets.ViewSet):
+class RegisterViewSet(viewsets.ViewSet):
+    """
+    create:
+    Anyone can create a account.
+
+    """
 
     permission_classes = (AllowAny,)
-    # permission_classes = (IsAuthenticated,)
-    authentication_classes = (BasicAuthentication,)
+
+
+
+    # schema = ManualSchema(fields=[
+    schema = AutoSchema(manual_fields=[
+        coreapi.Field(
+            "username",
+            description="TEst",
+            required=True,
+            location="path",
+            schema=coreschema.String()
+        ),
+        coreapi.Field(
+            "email",
+            required=True,
+            location="path",
+            schema=coreschema.String()
+        ),
+        coreapi.Field(
+            "password",
+            required=True,
+            location="path",
+            schema=coreschema.String()
+        ),
+    ])
+
 
     def create(self, request):
-        serializer = SignUpSerializer(data=request.data)
+        serializer = RegisterSerializer(data=request.data)
+        print("request.data--", request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-class LoginViewSet(viewsets.ViewSet):
+class UserViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (AllowAny,)
-    # authentication_classes = (JWTAuthentication,)
+    """
+    list:
+    Only Admin user can get list of users.
 
-    def create(self, request):
+    retrieve:
+    Any authenticated user can get its own details.
+    """
+    serializer_class = UserSerializer
 
-        email = request.data['email']
-        password = request.data['password']
-
-        user = User.objects.filter(email=email).first()
-
-        if user is None:
-            raise exceptions.AuthenticationFailed('User not found!')
-
-        if not user.check_password(password):
-            raise exceptions.AuthenticationFailed('Incorrect password!')
-
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')#.decode('utf-8')
-
-        response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'jwt': token
-        }
-        return response
-
-class LogOutViewSet(viewsets.ViewSet):
-
-    def create(self, request):
-        response = Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'Logout Successfully'
-        }
-        return response
-
-class UserViewSet(viewsets.ViewSet):
-
-    # permission_classes = (IsAuthenticated,)
-
-    # def list(self,request):
-
-    #     users = User.objects.all()
-    #     serializer = UserSerializer(users, many=True)
-    #     return Response(serializer.data)
-
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAuthenticated: ['update', 'partial_update', 'destroy', 'retrieve'],
+        IsAdminUser: ['list']
+    }
 
     def list(self,request):
-        token = request.COOKIES.get('jwt')
 
-        if not token:
-            raise exceptions.AuthenticationFailed('Unauthenticated!')
-
-        try:
-            # payload = jwt.decode(token, 'secret', algorithm=['HS256'])
-            payload = jwt.decode(token, 'secret', algorithms='HS256')
-        except jwt.ExpiredSignatureError:
-            raise exceptions.AuthenticationFailed('Unauthenticated!')
-
-        # print("payload--", payload)
-        user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializer(user)
-        # serializer = LoginSerializer(user)
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-# class UserViewSet(viewsets.ViewSet):
+    def retrieve(self,request,pk=None):
 
-#     permission_classes = (IsAuthenticated,)
+        print(request.user.username)
+        print(request.user.id)
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
-#     def list(self,request):
-
-#         users = User.objects.all()
-#         serializer = UserSerializer(users, many=True)
-#         return Response(serializer.data)
-
-#     def retrieve(self,request,pk=None):
-
-#         user = User.objects.get(id=pk)
-#         serializer = UserSerializer(user)
-#         return Response(serializer.data)
-
-#     # def create(self,request):
-#     #     serializer = UserSerializer(data=request.data)
-#     #     # print("request.data--", request.data)
-#     #     # print("serializer--", serializer)
-#     #     if serializer.is_valid():
-#     #         serializer.save()
-#     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def update(self,request,pk=None):
-#         user = User.objects.get(id=pk)
-#         serializer = UserSerializer(user, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({'message':'User Updated'}, status=status.HTTP_202_ACCEPTED)
-
-#         return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
-
-#     # def partial_update(self, request, pk=None):
-#     #     user = User.objects.get(id=pk)
-#     #     serializer = UserSerializer(user, data=request.data,partial=True)
-#     #     if serializer.is_valid():
-#     #         serializer.save()
-#     #         return Response({'message':'User Updated'}, status=status.HTTP_202_ACCEPTED)
-
-#     #     return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
-
-#     def destroy(self,request,pk=None):
-#         user = User.objects.get(id=pk)
-#         user.delete()
-#         return Response({'message':'User Deleted'}, status=status.HTTP_202_ACCEPTED)
-
-# Ref from
-# https://www.django-rest-framework.org/api-guide/viewsets/

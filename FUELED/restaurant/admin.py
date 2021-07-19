@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.gis.admin import OSMGeoAdmin
+#from django.contrib.gis.admin import OSMGeoAdmin
 
 # Register your models here.
 from .models import Restaurant, Review, Comment,ThumbDown,Visited
