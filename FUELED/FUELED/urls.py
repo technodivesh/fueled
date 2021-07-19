@@ -29,7 +29,6 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt import views as jwt_views
 from fldUser.api.views import CustomTokenObtainPairView
 
-# from FUELED import settings
 
 router = routers.DefaultRouter()
 router.register(r'restaurants', views.RestaurantViewSet, basename='api-restaurants')

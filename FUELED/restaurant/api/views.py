@@ -15,6 +15,10 @@ import json
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly 
 from rest_framework_simplejwt.tokens import AccessToken
 
+from rest_framework.schemas import ManualSchema, AutoSchema
+import coreapi,coreschema
+
+
 class RestaurantViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -196,48 +200,28 @@ class CommentViewSet(viewsets.ModelViewSet):
 class ThumbDownViewSet(viewsets.ViewSet):
     
     """
-    get:
-    A description of the get method on the custom action.
+    list:
+    Get the list of all .
 
-    post:
-    A description of the post method on the custom action.
+    create:
+    Mark the restaurant as ThumpDown
     """ 
     permission_classes = (IsAuthenticated,)
+
     def list(self,request):
 
-        user_id = request.GET.get('user_id', None)
-        thumbdown = ThumbDown.objects.filter(user=user_id).values_list('restaurant',flat=True).distinct()
-        # serializer = ThumbDownSerializer(thumbdown, many=True)
+        # user_id = request.GET.get('user_id', None)
+        # thumbdown = ThumbDown.objects.filter(user=user_id).values_list('restaurant',flat=True).distinct()
+        thumbdown = ThumbDown.objects.all()
+        serializer = ThumbDownSerializer(thumbdown, many=True)
         # print("user_id--",user_id)
-        # return Response(serializer.data)
-        return Response(thumbdown)
-
-    # def retrieve(self,request,pk=None):
-
-    #     # thumbdown = ThumbDown.objects.get(user=pk)
-    #     user_id = self.request.GET.get('user', None)
-    #     thumbdown = ThumbDown.objects.filter(user=user_id)
-    #     serializer = ThumbDownSerializer(thumbdown)
-    #     return Response(serializer.data)
+        return Response(serializer.data)
+        # return Response(thumbdown)
 
     def create(self,request):
 
-        """
-        param1 -- A first parameter
-        param2 -- A second parameter
-        """ 
-        print("request---",request.user)
-        ############################
-        # from rest_framework_simplejwt.backends import TokenBackend
-        # token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
-        # data = {'token': token}
-        #    try:
-        #       valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
-        #       user = valid_data['user']
-        #       request.user = user
-        #    except ValidationError as v:
-        #       print("validation error", v)
-      ###############################################
+        print("request---",request.user.id)
+        request.data['user'] = request.user.id
         serializer = ThumbDownSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -245,7 +229,8 @@ class ThumbDownViewSet(viewsets.ViewSet):
 
         # return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
 
-    def destroy(self,request,pk=None):
+    def destroy(self,request):
+        pk = request.GET.get('restaurant')
         thumbdown = ThumbDown.objects.get(id=pk)
         thumbdown.delete()
         return Response({'message':'ThumbDown Removed'}, status=status.HTTP_202_ACCEPTED)

@@ -56,8 +56,8 @@ class ThumbDownSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThumbDown
 
-        fields = '__all__'
-        # fields = ['restaurant']
+        # fields = '__all__'
+        fields = ['user','restaurant']
 
 class VisitedSerializer(serializers.ModelSerializer):
     class Meta:
