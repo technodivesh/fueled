@@ -53,7 +53,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('schema', get_schema_view(
+    path('schema/', get_schema_view(
         title="RestaurantAPI",
         description="API for the Restaurant Recommendation",
         url='http://localhost/api/schema',
